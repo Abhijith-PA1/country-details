@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+ 
+    
+</head>
+<body style=" background-color: rgba(224, 133, 29, 0.795);" >
+
+
+    <!-- navebar -->
+
+        <!-- As a heading -->
+        
+        <nav class="navbar bg-dark ">
+            <div class="container-fluid">
+              <h1 class="navbar-brand mb-0 h1 text-light mx-5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe-americas" viewBox="0 0 15 16">
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484q-.121.12-.242.234c-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
+              </svg>   CountryDetails</h1>
+            </div>
+          </nav> 
+          
+          
+    <!--contend  -->
+    <section >
+      
+    <!-- inputbox -->
+
+    <div class="row">
+      <div class="col "></div>
+      <div class="col bg-dark  m-5 p-5 ">
+          <input id="cname" type="text" class="form-control" placeholder="Country Name">
+          <div class="row">
+              <div class="col"></div>
+              <div class="col">
+                  <button onclick="Submit()" type="button" class="btn btn-outline-danger mt-5">Submit</button>
+
+              </div>
+              <div class="col">
+                <button onclick="Clear()" type="button" class="btn btn-outline-secondary mt-5">Clear</button>
+              </div>
+              <div class="col"></div>
+          </div>
+          
+      </div>
+      <div class="col"></div>
+  </div>
+
+  <!-- cards -->
+
+  <div class="row m-5" style=" height: 995px;">
+    <div class="col-2"></div>
+    <div  class="col">
+        <div id="cdetails"></div>
+    </div>
+
+    <div  class="col">
+      <div id="cimg"></div>
+    </div>
+    <div class="col-2"></div>
+  </div>
+    </section>
+   
+
+    <!-- footer -->
+
+    <footer class="bg-dark text-light text-center text-lg-start">
+        <!-- Copyright -->
+        <div class="text-center p-3">
+          © 2020 Copyright:
+          <a class=" link-light"  href="">CountryDetails.com</a>
+        </div>
+        <!-- Copyright -->
+      </footer>
+    
+</body>
+
+<script>
+
+    function Submit(){
+      let countryName = document.getElementById('cname').value;
+        console.log(countryName);
+
+           fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
+
+           .then(Response => Response.json())
+           .then(data => displayData(data))
+           .catch(errer =>{
+               alert('Faild to fetch conuntrydetails');
+           })
+    }           
+
+          
+
+
+           function displayData(data){
+            console.log(data);
+            
+            Capital = data[0].capital[0]
+            Flag = data[0].flags.png
+            Contend = data[0].flags.alt
+            Name = data[0].name.common
+            code = Object.values(data[0].currencies)[0];
+            // console.log(code);
+            Currencies = code.name
+            Languages = Object.values(data[0].languages);
+            // console.log(Languages[0]);
+            Region = data[0].region
+            CostOfArms = data[0].coatOfArms.png
+            // console.log(Capital,Flag,Name,Currencies,Region,CostOfArms);
+
+            htmlData = `
+              <div id="cdetails" class="card" style="width: 18rem;">
+                <img src="${Flag}" class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">${Name} </h5>
+                  <p class="card-text">${Contend}</p>
+                  <div class="card-header">
+                    Capital : ${Capital}
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Currencies : ${Currencies}(${code.symbol})</li>
+                    <li class="list-group-item">Region : ${Region}</li>
+                    <li class="list-group-item">Languages : ${Languages[0]},${Languages[1]},${Languages[2]}</li>
+                    <li class="list-group-item">Maps : <a href="${data[0].maps.googleMaps}">${data[0].maps.googleMaps}</a></li>
+                  </ul>
+                </div>
+              </div>   `
+
+              cdetails.innerHTML= htmlData
+
+
+            htmlDataimg = `
+            <div class="card" style="width: 18rem;">
+               <img width="450" height="350" src=" ${CostOfArms}" class="card-img-top" alt="...">
+          
+            </div>
+            
+            ` 
+
+             cimg.innerHTML=htmlDataimg 
+                  
+
+            }
+
+            // Clear
+
+            function Clear(){
+              location.reload();
+            }
+
+
+
+
+</script>
+</html>
